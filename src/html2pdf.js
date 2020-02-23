@@ -13,7 +13,7 @@ import Html2PdfUtils from './utils';
 
 class Html2Pdf {
 
-  constructor (source, options = {}) {
+  constructor(source, options = {}) {
     if (!(this instanceof Html2Pdf)) {
       return new Html2Pdf(source, options);
     }
@@ -105,7 +105,7 @@ class Html2Pdf {
     if (!source) {
       console.warn('[Html2Pdf] source element not set (null or undefined)');
     } else if (typeof source === 'string') {
-      this.source = Html2PdfUtils.createElement('div', { innerHTML: source });
+      this.source = Html2PdfUtils.createElement('div', {innerHTML: source});
     } else if (typeof source === 'object' && source.nodeType === 1) {
       this.source = Html2PdfUtils.cloneNode(source, this.javascriptEnabled);
     } else {
@@ -136,8 +136,8 @@ class Html2Pdf {
     overlayCSS.opacity = 0;
 
     // Create and attach the elements.
-    let overlay = Html2PdfUtils.createElement('div', { class: 'html2pdf__overlay', style: overlayCSS });
-    let container = Html2PdfUtils.createElement('div', { class: 'html2pdf__container', style: containerCSS });
+    let overlay = Html2PdfUtils.createElement('div', {class: 'html2pdf__overlay', style: overlayCSS});
+    let container = Html2PdfUtils.createElement('div', {class: 'html2pdf__container', style: containerCSS});
 
     container.appendChild(this.source);
     overlay.appendChild(container);
@@ -186,7 +186,7 @@ class Html2Pdf {
 
               clientRect.left -= containerRect.left;
               clientRect.top -= containerRect.top;
-              this.links.push({ el: link, clientRect: clientRect });
+              this.links.push({el: link, clientRect: clientRect});
             }
           });
         }
@@ -239,13 +239,15 @@ class Html2Pdf {
             pageHeight = pageCanvas.height * this.pageSize.inner.width / pageCanvas.width;
           }
 
+          pageCanvas.height += 15;
+
           // Display the page.
           let w = pageCanvas.width;
           let h = pageCanvas.height;
 
           pageCtx.fillStyle = 'white';
           pageCtx.fillRect(0, 0, w, h);
-          pageCtx.drawImage(canvas, 0, page * pxPageHeight, w, h, 0, 0, w, h);
+          pageCtx.drawImage(canvas, 0, Math.max(page * pxPageHeight - 15, 0), w, h, 0, 0, w, h);
 
           // Add the page to the PDF.
           if (page) {
@@ -264,7 +266,7 @@ class Html2Pdf {
                 let left = this.margin[1] + link.clientRect.left;
                 let top = this.margin[0] + link.clientRect.top - pageTop;
 
-                pdf.link(left, top, link.clientRect.width, link.clientRect.height, { url: link.el.href });
+                pdf.link(left, top, link.clientRect.width, link.clientRect.height, {url: link.el.href});
               }
             }, this);
           }
